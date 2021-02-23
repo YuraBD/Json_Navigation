@@ -1,9 +1,35 @@
+'''
+This module provides an ability to navigate through json object.
+
+It has 3 functions:
+
+1) make_json(user, friends_number, bearer_token)
+
+Return json object of friend of given user.
+user - username of Twitter user
+friends_number - number of friends to show
+bearer token - bearer token which twitter users with
+    developer accounts havew
+
+2) navigate(obj, depth = 0)
+
+The function that do all navigation through json object.
+
+3) main()
+
+Main function. It starts the whole program of navigation
+'''
 import requests
-import pprint
-import json
 
 
 def make_json(user, friends_number, bearer_token):
+    '''
+    Return json object of friend of given user.
+    user - username of Twitter user
+    friends_number - number of friends to get
+    bearer token - bearer token which twitter users with
+     developer accounts havew
+    '''
     base_url = "https://api.twitter.com/"
     search_url = f"{base_url}1.1/friends/list.json"
     search_headers = {
@@ -13,18 +39,24 @@ def make_json(user, friends_number, bearer_token):
         'screen_name': user,
         'count': friends_number
     }
-    response = requests.get(search_url, headers=search_headers, params=search_params)
+    response = requests.get(search_url, headers=search_headers,\
+                            params=search_params)
     json_response = response.json()
     return json_response
 
 
 def navigate(obj, depth = 0):
+    '''
+    The function that do all navigation through json object.
+    '''
     while True:
         if isinstance(obj, dict):
             if depth != 0:
-                print("This is dictionary. Enter a key index from list below or -1 to return back, -2 to end a program: ")
+                print("This is dictionary. Enter a key index \
+from list below or -1 to return back, -2 to end a program: ")
             else:
-                print("This is dictionary. Enter a key index from list below or -2 to end a program: ")
+                print("This is dictionary. Enter a key index \
+from list below or -2 to end a program: ")
             keys = list(obj.keys())
             for i in range(len(keys)):
                 if i == len(keys) - 1:
@@ -54,7 +86,8 @@ def navigate(obj, depth = 0):
                         print(f'{i}) {obj[i]}')
                         break
                     print(f'{i}) {obj[i]}   ', end='')
-            print(f'Enter an index in range from 0 to {len(obj)-1} or -1 to return back, -2 to end a program')
+            print(f'Enter an index in range from 0 to {len(obj)-1} or -1 \
+to return back, -2 to end a program')
             ind = int(input("Enter an index: "))
             if ind == -2:
                 print("Do you want to end a program?")
@@ -76,13 +109,15 @@ def navigate(obj, depth = 0):
             print('Enter -1 to return back or -2 to end a program')
             if int(input('>>> ')) == -1:
                 return 1
-            else:
-                return 0 
+            return 0
 
 
 def main():
+    '''
+    Main function. It starts the whole program of navigation
+    '''
     user = input('Enter username: ')
-    friend_number = int(input('Enter number of friends to show: '))
+    friend_number = int(input('Enter number of friends to get: '))
     bearer_token = input('Enter bearer token: ')
     friends_json = make_json(user, friend_number, bearer_token)
     navigate(friends_json)
